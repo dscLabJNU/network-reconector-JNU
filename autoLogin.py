@@ -1,37 +1,77 @@
+from typing import final
 from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
+import os
 import time
 
-if __name__=="__main__":
-    while 1:
-        driver = webdriver.Chrome(r'C:/pythonTools/Tools/chromedriver.exe')
-        # 设置浏览器窗口的位置和大小
-        driver.set_window_position(20,40)
-        driver.set_window_size(1100,700)
-        path = "http://192.168.11.67/eportal/index.jsp?wlanuserip=38ede9139ec247e2f452c388d9189a02&wlanacname=2a9ead5bc601264ff44e7c7032f4e16dd57e63ddf1a91b00&ssid=&nasip=b3767e8ff469cefac1a5e44ffd87e53a&mac=3253653712e6a49e8c46d1d335582ff2&t=wireless-v2&url=ed45cb0bbc0c5769479a20ae02dc85564053a7962e772c02"
-        # C:/python/loginSschoolNetwork/hello.html
-        path1 = "http://192.168.11.67"
-        driver.get(path1)
-        driver.implicitly_wait(10)
-        
-        d = driver.find_element_by_id("username")
-        driver.execute_script('arguments[0].removeAttribute(\"readonly\")',d);
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("username").clear()
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("username").click()
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("username").send_keys("1834241002")
-        driver.implicitly_wait(20)
-        driver.find_element_by_id("username").send_keys(Keys.TAB)
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("pwd").clear()
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("pwd").click()
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("pwd").send_keys("WZRwuzhaorui32.")
-        driver.implicitly_wait(10)
-        driver.find_element_by_id("loginLink_div").click()
-        driver.implicitly_wait(20)
-        time.sleep(3600)
-        driver.quit()
+WEB_DRIVER_PATH = ""
+CAMPUS_NETWORK_URL = "http://192.168.11.67"
+CAMPUS_NETWORK_USERNAME = ""
+CAMPUS_NETWORK_PASSWORD = ""
+WEB_INITIALIZE_WAIT = 10
+WEB_ACTION_WAIT = 1.5
+WATCHDOG_PING_INTERVAL = 15
+WATCHDOG_RETRY_INTERVAL = 5
+
+
+def login(username: str, password: str) -> bool:
+    driver: WebDriver = None
+    try:
+        driver = init_webdriver()
+        driver.get(CAMPUS_NETWORK_URL)
+        driver.implicitly_wait(WEB_INITIALIZE_WAIT)
+        driver.find_element_by_id("username_tip").click()
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        driver.find_element_by_id("username").send_keys(username)
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+
+        driver.find_element_by_id("password_tip").click()
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        driver.find_element_by_id("password").send_keys(password)
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+
+        driver.find_element_by_id("loginLink").click()
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        return True
+    except:
+        return False
+    finally:
+        if driver is not None:
+            driver.quit()
+
+
+def init_webdriver() -> WebDriver:
+    driver = webdriver.Chrome(WEB_DRIVER_PATH)
+    driver.set_window_position(20, 40)
+    driver.set_window_size(1100, 700)
+    return driver
+
+
+def ping(host: str) -> bool:
+    response = os.system("ping -c 1 " + host)
+    if response == 0:
+        return True
+    else:
+        return False
+
+
+def watchdog_loop() -> None:
+    while True:
+        if not ping("baidu.com"):
+            print("Ping baidu.com failed, try to login...")
+            while not login(username=CAMPUS_NETWORK_USERNAME,
+                            password=CAMPUS_NETWORK_PASSWORD):
+                print("Login failed, retry after {0} s".format(
+                    WATCHDOG_RETRY_INTERVAL))
+                time.sleep(WATCHDOG_RETRY_INTERVAL)
+            print("Login successfuly, ping after {0}".format(
+                WATCHDOG_PING_INTERVAL))
+        time.sleep(WATCHDOG_PING_INTERVAL)
+
+
+def main():
+    watchdog_loop()
+
+if __name__ == "__main__":
+    main()
