@@ -16,28 +16,35 @@ WATCHDOG_RETRY_INTERVAL = 5
 
 
 def login(username: str, password: str) -> bool:
+
     driver: WebDriver = None
-    driver = init_webdriver()
-    driver.get(CAMPUS_NETWORK_URL)
-    driver.implicitly_wait(WEB_INITIALIZE_WAIT)
-    username_box = driver.find_element_by_id("username")
-    driver.execute_script("arguments[0].style.display = 'block';", username_box)
-    driver.implicitly_wait(WEB_ACTION_WAIT)
-    username_box.click()
-    driver.implicitly_wait(WEB_ACTION_WAIT)
-    username_box.send_keys(username)
-    driver.implicitly_wait(WEB_ACTION_WAIT)
+    try:
+        driver = init_webdriver()
+        driver.get(CAMPUS_NETWORK_URL)
+        driver.implicitly_wait(WEB_INITIALIZE_WAIT)
+        username_box = driver.find_element_by_id("username")
+        driver.execute_script("arguments[0].style.display = 'block';", username_box)
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        username_box.click()
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        username_box.send_keys(username)
+        driver.implicitly_wait(WEB_ACTION_WAIT)
 
-    pwd_box = driver.find_element_by_id("pwd")
-    driver.execute_script("arguments[0].style.display = 'block';", pwd_box)
-    driver.implicitly_wait(WEB_ACTION_WAIT)
-    pwd_box.click()
-    driver.implicitly_wait(WEB_ACTION_WAIT)
-    pwd_box.send_keys(password)
-    driver.implicitly_wait(WEB_ACTION_WAIT)
+        pwd_box = driver.find_element_by_id("pwd")
+        driver.execute_script("arguments[0].style.display = 'block';", pwd_box)
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        pwd_box.click()
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+        pwd_box.send_keys(password)
+        driver.implicitly_wait(WEB_ACTION_WAIT)
 
-    driver.find_element_by_id("loginLink").click()
-    driver.implicitly_wait(WEB_ACTION_WAIT)
+        driver.find_element_by_id("loginLink").click()
+        driver.implicitly_wait(WEB_ACTION_WAIT)
+    except:
+        return False
+    finally:
+        if driver is not None:
+            driver.quit()
     return True
 
 
