@@ -1,14 +1,12 @@
-from typing import final
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
+import config
 import os
 import time
 
-WEB_DRIVER_PATH = "/Users/samersions/Documents/Development/loginSschoolNetwork/driver/chromedriver"
+WEB_DRIVER_PATH="./driver/chromedriver.exe"
 CAMPUS_NETWORK_URL = "http://192.168.11.67"
-CAMPUS_NETWORK_USERNAME = ""
-CAMPUS_NETWORK_PASSWORD = ""
 WEB_INITIALIZE_WAIT = 10
 WEB_ACTION_WAIT = 1.5
 WATCHDOG_PING_INTERVAL = 15
@@ -37,7 +35,6 @@ def login(username: str, password: str) -> bool:
         driver.implicitly_wait(WEB_ACTION_WAIT)
         pwd_box.send_keys(password)
         driver.implicitly_wait(WEB_ACTION_WAIT)
-
         driver.find_element_by_id("loginLink").click()
         driver.implicitly_wait(WEB_ACTION_WAIT)
     except:
@@ -67,8 +64,8 @@ def watchdog_loop() -> None:
     while True:
         if not ping("baidu.com"):
             print("Ping baidu.com failed, try to login...")
-            while not login(username=CAMPUS_NETWORK_USERNAME,
-                            password=CAMPUS_NETWORK_PASSWORD):
+            while not login(username=config.CAMPUS_NETWORK_USERNAME,
+                            password=config.CAMPUS_NETWORK_USERNAME):
                 print("Login failed, retry after {0} s".format(
                     WATCHDOG_RETRY_INTERVAL))
                 time.sleep(WATCHDOG_RETRY_INTERVAL)
