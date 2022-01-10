@@ -1,3 +1,4 @@
+import random
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
@@ -13,7 +14,12 @@ WATCHDOG_PING_INTERVAL = 15
 WATCHDOG_RETRY_INTERVAL = 5
 
 
-def login(username: str, password: str) -> bool:
+def login() -> bool:
+    account_list = list(config.ACCOUNT_POOL.keys())
+    lucky_man = random.choice(account_list)
+    username = config.ACCOUNT_POOL[lucky_man]['username']
+    password = config.ACCOUNT_POOL[lucky_man]['passwd']
+    print(f"The lucky man is {lucky_man}")
 
     driver: WebDriver = None
     try:
@@ -64,8 +70,7 @@ def watchdog_loop() -> None:
     while True:
         if not ping("baidu.com"):
             print("Ping baidu.com failed, try to login...")
-            while not login(username=config.CAMPUS_NETWORK_USERNAME,
-                            password=config.CAMPUS_NETWORK_PASSWORD):
+            while not login():
                 print("Login failed, retry after {0} s".format(
                     WATCHDOG_RETRY_INTERVAL))
                 time.sleep(WATCHDOG_RETRY_INTERVAL)

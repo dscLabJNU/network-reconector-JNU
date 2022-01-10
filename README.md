@@ -5,12 +5,12 @@ This tool provides the automatic reconnection function of campus network.
 
 
 # Configuration
+To prevent blocking, use the account pool to login in to the campus network.
 
 First create a configuration file `config.py` in the root directory.
 
-Then, add parameter `CAMPUS_NETWORK_USERNAME` and parameter  `CAMPUS_NETWORK_PASSWORD` to the config file
+Then, add a dictionary named `ACCOUNT_POOL` into `config.py`, as `ACCOUNT_POOL:{${id}:{${username}:${passwd}}}`, where `${id}` is just an identify for an account, `${username}` indicates the `username` and `${passwd}` is the `passwd` of each campus account.
 
-`CAMPUS_NETWORK_USERNAME` indicates the `username` and `CAMPUS_NETWORK_PASSWORD` is the `passwd` of your campus account.
 
 After that, just download a chrome driver [on this website](http://chromedriver.storage.googleapis.com/index.html), and move it into `./driver` directory.
 
