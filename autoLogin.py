@@ -74,7 +74,7 @@ def watchdog_loop() -> None:
                 print("Login failed, retry after {0} s".format(
                     WATCHDOG_RETRY_INTERVAL))
                 time.sleep(WATCHDOG_RETRY_INTERVAL)
-            print("Login successfuly, ping after {0}".format(
+            print("Login successfuly, ping after {0} s".format(
                 WATCHDOG_PING_INTERVAL))
         time.sleep(WATCHDOG_PING_INTERVAL)
 
