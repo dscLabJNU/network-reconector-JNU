@@ -65,7 +65,7 @@ def watchdog_loop() -> None:
         if not ping("baidu.com"):
             print("Ping baidu.com failed, try to login...")
             while not login(username=config.CAMPUS_NETWORK_USERNAME,
-                            password=config.CAMPUS_NETWORK_USERNAME):
+                            password=config.CAMPUS_NETWORK_PASSWORD):
                 print("Login failed, retry after {0} s".format(
                     WATCHDOG_RETRY_INTERVAL))
                 time.sleep(WATCHDOG_RETRY_INTERVAL)
