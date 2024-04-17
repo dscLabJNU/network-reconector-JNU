@@ -12,7 +12,7 @@ First create a configuration file `config.py` in the root directory.
 Then, add a dictionary named `ACCOUNT_POOL` into `config.py`, as `ACCOUNT_POOL:{${id}:{${username}:${passwd}}}`, where `${id}` is just an identify for an account, `${username}` indicates the `username` and `${passwd}` is the `passwd` of each campus account.
 
 
-After that, just download a chrome driver [on this website](http://chromedriver.storage.googleapis.com/index.html), and move it into `./driver` directory (create the directory if necessary).
+After that, just download a chrome driver [on this website](https://googlechromelabs.github.io/chrome-for-testing), and move it into `./driver` directory (create the directory if necessary).
 
 **Please Make sure the version between the driver and your chrome is the same.**
 
